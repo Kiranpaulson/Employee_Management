@@ -6,8 +6,17 @@ using System.Threading.Tasks;
 
 namespace EMPLOYEE_MANAGEMENT.Application.CustomException
 {
-    public class NotFoundException:Exception
+    /// <summary>
+    /// Represents an exception that is thrown when a requested resource
+    /// or entity cannot be found in the system.
+    /// </summary>
+    public class NotFoundException : Exception
     {
-        public NotFoundException(string message) :base(message){ }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NotFoundException"/> class
+        /// with a specified error message that describes the missing resource.
+        /// </summary>
+        /// <param name="message">A descriptive message explaining the cause of the exception.</param>
+        public NotFoundException(string message) : base(message) { }
     }
 }

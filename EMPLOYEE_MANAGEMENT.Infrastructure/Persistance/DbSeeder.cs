@@ -1,69 +1,29 @@
 ﻿using EMPLOYEE_MANAGEMENT.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
 
-namespace EMPLOYEE_MANAGEMENT.Infrastructure.Context
+namespace EMPLOYEE_MANAGEMENT.Infrastructure.Persistance
 {
-    public class AppDbContext : DbContext
+    public static class DbSeeder
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options)
-            : base(options)
+        public static void Seed(this ModelBuilder modelBuilder)
         {
-        }
-
-        public DbSet<Employee> Employees { get; set; }
-        public DbSet<Department> Departments { get; set; }
-        public DbSet<User> Users { get; set; }
-        public DbSet<Role> Roles { get; set; }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-
-            // ============================
-            // 🔗 RELATIONSHIPS
-            // ============================
-
-            // Employee ↔ User (One-to-One)
-            modelBuilder.Entity<Employee>()
-                .HasOne(e => e.User)
-                .WithOne(u => u.Employee)
-                .HasForeignKey<Employee>(e => e.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            // Employee ↔ Department (Many-to-One)
-            modelBuilder.Entity<Employee>()
-                .HasOne(e => e.Department)
-                .WithMany(d => d.Employees)
-                .HasForeignKey(e => e.DepartmentId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            // Employee ↔ Role (Many-to-One)
-            modelBuilder.Entity<Employee>()
-                .HasOne(e => e.Role)
-                .WithMany()
-                .HasForeignKey(e => e.RoleId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            // ============================
-            // 🔹 SEED DATA
-            // ============================
-
             var now = DateTime.UtcNow;
 
-            // Seed Roles
-           
-
+            // ============================
+            // 🔹 SEED ROLES
+            // ============================
             modelBuilder.Entity<Role>().HasData(
                 new Role { Id = 1, Name = "Admin", Description = "Administrator role", CreatedDate = now, UpdatedDate = now },
                 new Role { Id = 2, Name = "Employee", Description = "Employee role", CreatedDate = now, UpdatedDate = now },
-
                 new Role { Id = 3, Name = "HR Manager", Description = "Manages HR operations", CreatedDate = now, UpdatedDate = now },
                 new Role { Id = 4, Name = "Software Engineer", Description = "Responsible for development", CreatedDate = now, UpdatedDate = now }
             );
 
-
-            // Seed Departments
+            // ============================
+            // 🔹 SEED DEPARTMENTS
+            // ============================
             modelBuilder.Entity<Department>().HasData(
                 new Department
                 {
@@ -83,7 +43,9 @@ namespace EMPLOYEE_MANAGEMENT.Infrastructure.Context
                 }
             );
 
-            // Seed Users
+            // ============================
+            // 🔹 SEED USERS
+            // ============================
             modelBuilder.Entity<User>().HasData(
                 new User
                 {
@@ -103,7 +65,9 @@ namespace EMPLOYEE_MANAGEMENT.Infrastructure.Context
                 }
             );
 
-            // Seed Employees
+            // ============================
+            // 🔹 SEED EMPLOYEES
+            // ============================
             modelBuilder.Entity<Employee>().HasData(
                 new Employee
                 {

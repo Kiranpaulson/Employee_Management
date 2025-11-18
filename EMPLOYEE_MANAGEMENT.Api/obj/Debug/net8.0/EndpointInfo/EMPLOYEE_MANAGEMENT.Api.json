@@ -254,10 +254,6 @@
             "type": "string",
             "nullable": true
           },
-          "email": {
-            "type": "string",
-            "nullable": true
-          },
           "phoneNumber": {
             "type": "string",
             "nullable": true
@@ -266,9 +262,9 @@
             "type": "string",
             "nullable": true
           },
-          "role": {
-            "type": "string",
-            "nullable": true
+          "roleId": {
+            "type": "integer",
+            "format": "int32"
           },
           "userId": {
             "type": "integer",
@@ -277,6 +273,14 @@
           "departmentId": {
             "type": "integer",
             "format": "int32"
+          },
+          "createdDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedDate": {
+            "type": "string",
+            "format": "date-time"
           }
         },
         "additionalProperties": false
