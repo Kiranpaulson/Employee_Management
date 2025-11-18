@@ -2,7 +2,7 @@
 using EMPLOYEE_MANAGEMENT.Application.Wrapper;
 using MediatR;
 
-namespace EMPLOYEE_MANAGEMENT.Application.Command
+namespace EMPLOYEE_MANAGEMENT.Application.Command.Employee
 {
     public class CreateEmployeeCommand : IRequest<ApiResponse<EmployeeDto>>
     {

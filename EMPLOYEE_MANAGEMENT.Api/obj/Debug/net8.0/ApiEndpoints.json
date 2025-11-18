@@ -29,7 +29,7 @@
     "Parameters": [
       {
         "Name": "command",
-        "Type": "EMPLOYEE_MANAGEMENT.Application.Command.CreateEmployeeCommand",
+        "Type": "EMPLOYEE_MANAGEMENT.Application.Command.Employee.CreateEmployeeCommand",
         "IsRequired": true
       }
     ],
@@ -55,7 +55,7 @@
     "Parameters": [
       {
         "Name": "command",
-        "Type": "EMPLOYEE_MANAGEMENT.Application.Command.UpdateEmployeeCommand",
+        "Type": "EMPLOYEE_MANAGEMENT.Application.Command.Employee.UpdateEmployeeCommand",
         "IsRequired": true
       }
     ],

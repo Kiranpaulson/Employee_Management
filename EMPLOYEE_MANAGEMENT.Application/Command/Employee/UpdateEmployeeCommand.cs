@@ -2,7 +2,7 @@
 using EMPLOYEE_MANAGEMENT.Application.Wrapper;
 using MediatR;
 
-namespace EMPLOYEE_MANAGEMENT.Application.Command
+namespace EMPLOYEE_MANAGEMENT.Application.Command.Employee
 {
     public class UpdateEmployeeCommand : IRequest<ApiResponse<EmployeeDto>>
     {
@@ -11,9 +11,11 @@ namespace EMPLOYEE_MANAGEMENT.Application.Command
         public string? Name { get; set; }
         public string? PhoneNumber { get; set; }
         public string? AadharNumber { get; set; }
-        public string? Role { get; set; }
+        public int? RoleId { get; set; }
         public int? UserId { get; set; }
         public int? DepartmentId { get; set; }
-       
+        public DateTime UpdatedDate{ get; set; }
+
+
     }
 }

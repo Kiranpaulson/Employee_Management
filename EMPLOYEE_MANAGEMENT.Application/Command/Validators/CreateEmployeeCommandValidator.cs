@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using EMPLOYEE_MANAGEMENT.Application.Command;
+using EMPLOYEE_MANAGEMENT.Application.Command.Employee;
 
 namespace EMPLOYEE_MANAGEMENT.Application.Command.Validators
 {

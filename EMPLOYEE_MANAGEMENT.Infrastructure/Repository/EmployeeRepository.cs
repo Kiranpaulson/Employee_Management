@@ -22,17 +22,20 @@ namespace EMPLOYEE_MANAGEMENT.Infrastructure.Repository
         public Task<List<Employee>> GetEmployeesWithRelationsAsync()
         {
             return _dbContext.Employees
-                .Include(e => e.Department)
-                .Include(e => e.User)
-                .ToListAsync();
+           .Include(e => e.Department)
+           .Include(e => e.User)
+           .Include(e => e.Role) // ⭐ ADD THIS
+           .ToListAsync();
+
         }
 
         public async Task<Employee> GetEmployeeWithRelationsByIdAsync(int id)
         {
             return await _dbContext.Employees
-                .Include(e => e.User)
-                .Include(e => e.Department)
-                .FirstOrDefaultAsync(e => e.Id == id);
+       .Include(e => e.User)
+       .Include(e => e.Department)
+       .Include(e => e.Role) // ⭐ ADD THIS
+       .FirstOrDefaultAsync(e => e.Id == id);
         }
 
 

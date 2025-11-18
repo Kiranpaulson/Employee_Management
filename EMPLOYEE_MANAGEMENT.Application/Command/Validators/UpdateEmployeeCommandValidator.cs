@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using EMPLOYEE_MANAGEMENT.Application.Command;
+using EMPLOYEE_MANAGEMENT.Application.Command.Employee;
 
 namespace EMPLOYEE_MANAGEMENT.Application.Command.Validators
 {
@@ -35,11 +35,7 @@ namespace EMPLOYEE_MANAGEMENT.Application.Command.Validators
                 .When(x => x.AadharNumber != null)
                 .WithMessage("Aadhar must contain only digits.");
 
-            RuleFor(x => x.Role)
-                .MaximumLength(50)
-                .When(x => x.Role != null)
-                .WithMessage("Role must not exceed 50 characters.");
-
+           
             RuleFor(x => x.DepartmentId)
                 .GreaterThan(0)
                 .When(x => x.DepartmentId != null)

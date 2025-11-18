@@ -390,8 +390,9 @@
             "type": "string",
             "nullable": true
           },
-          "role": {
-            "type": "string",
+          "roleId": {
+            "type": "integer",
+            "format": "int32",
             "nullable": true
           },
           "userId": {
@@ -403,6 +404,10 @@
             "type": "integer",
             "format": "int32",
             "nullable": true
+          },
+          "updatedDate": {
+            "type": "string",
+            "format": "date-time"
           }
         },
         "additionalProperties": false

@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using EMPLOYEE_MANAGEMENT.Application.Command;
+using EMPLOYEE_MANAGEMENT.Application.Command.Employee;
 using EMPLOYEE_MANAGEMENT.Application.Dto;
 using EMPLOYEE_MANAGEMENT.Application.Wrapper;
 using EMPLOYEE_MANAGEMENT.Domain.Entities;
