@@ -1,5 +1,7 @@
-﻿using EMPLOYEE_MANAGEMENT.Domain.Persistance;
+﻿using EMPLOYEE_MANAGEMENT.Application.logging;
+using EMPLOYEE_MANAGEMENT.Domain.Persistance;
 using EMPLOYEE_MANAGEMENT.Infrastructure.Context;
+using EMPLOYEE_MANAGEMENT.Infrastructure.Logging;
 using EMPLOYEE_MANAGEMENT.Infrastructure.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -18,6 +20,7 @@ namespace EMPLOYEE_MANAGEMENT.Infrastructure
             // ✅ Register Repositories
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            services.AddScoped(typeof(IAppLogger<>), typeof(LoggerAdapter<>));
 
             return services;
         }

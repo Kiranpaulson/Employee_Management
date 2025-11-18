@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using EMPLOYEE_MANAGEMENT.Application.CustomException;
 using EMPLOYEE_MANAGEMENT.Application.Dto;
 using EMPLOYEE_MANAGEMENT.Application.Query.Employee;
 using EMPLOYEE_MANAGEMENT.Application.Wrapper;
@@ -9,7 +10,8 @@ using System.Threading.Tasks;
 
 namespace EMPLOYEE_MANAGEMENT.Application.Handler
 {
-    public class GetEmployeeByIdQueryHandler : IRequestHandler<GetEmployeeByIdQuery, ApiResponse<EmployeeDto>>
+    public class GetEmployeeByIdQueryHandler
+        : IRequestHandler<GetEmployeeByIdQuery, ApiResponse<EmployeeDto>>
     {
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IMapper _mapper;
@@ -22,12 +24,12 @@ namespace EMPLOYEE_MANAGEMENT.Application.Handler
 
         public async Task<ApiResponse<EmployeeDto>> Handle(GetEmployeeByIdQuery request, CancellationToken cancellationToken)
         {
-            // Fetch employee by Id along with related User and Department
             var employee = await _employeeRepository.GetEmployeeWithRelationsByIdAsync(request.Id);
 
             if (employee == null)
             {
-                return ApiResponse<EmployeeDto>.Fail($"Employee with Id {request.Id} not found");
+                // THROW — let middleware handle it
+                throw new NotFoundException($"Employee with Id {request.Id} not found");
             }
 
             var employeeDto = _mapper.Map<EmployeeDto>(employee);

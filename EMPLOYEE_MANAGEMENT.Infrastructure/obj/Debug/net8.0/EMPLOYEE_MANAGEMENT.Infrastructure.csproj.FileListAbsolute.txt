@@ -32,3 +32,6 @@ C:\Users\kiran.paulson\Desktop\OJT_Project\Employee_Management\EMPLOYEE_MANAGEME
 C:\Users\kiran.paulson\Desktop\OJT_Project\Employee_Management\EMPLOYEE_MANAGEMENT.Infrastructure\obj\Debug\net8.0\EMPLOYEE_MANAGEMENT.Infrastructure.pdb
 C:\Users\kiran.paulson\Desktop\OJT_Project\Employee_Management\EMPLOYEE_MANAGEMENT.Infrastructure\obj\Debug\net8.0\EMPLOYEE_MANAGEMENT.Infrastructure.genruntimeconfig.cache
 C:\Users\kiran.paulson\Desktop\OJT_Project\Employee_Management\EMPLOYEE_MANAGEMENT.Infrastructure\obj\Debug\net8.0\ref\EMPLOYEE_MANAGEMENT.Infrastructure.dll
+C:\Users\kiran.paulson\Desktop\OJT_Project\Employee_Management\EMPLOYEE_MANAGEMENT.Infrastructure\obj\Debug\net8.0\EMPLOYEE_MANAGEMENT.Infrastructure.sourcelink.json
+C:\Users\kiran.paulson\Desktop\OJT_Project\Employee_Management\EMPLOYEE_MANAGEMENT.Infrastructure\bin\Debug\net8.0\EMPLOYEE_MANAGEMENT.Application.dll
+C:\Users\kiran.paulson\Desktop\OJT_Project\Employee_Management\EMPLOYEE_MANAGEMENT.Infrastructure\bin\Debug\net8.0\EMPLOYEE_MANAGEMENT.Application.pdb

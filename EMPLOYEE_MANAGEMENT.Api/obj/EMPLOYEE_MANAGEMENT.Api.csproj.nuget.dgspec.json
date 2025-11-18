@@ -291,6 +291,9 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
+              "C:\\Users\\kiran.paulson\\Desktop\\OJT_Project\\Employee_Management\\EMPLOYEE_MANAGEMENT.Application\\EMPLOYEE_MANAGEMENT.Application.csproj": {
+                "projectPath": "C:\\Users\\kiran.paulson\\Desktop\\OJT_Project\\Employee_Management\\EMPLOYEE_MANAGEMENT.Application\\EMPLOYEE_MANAGEMENT.Application.csproj"
+              },
               "C:\\Users\\kiran.paulson\\Desktop\\OJT_Project\\Employee_Management\\EMPLOYEE_MANAGEMENT.Domain\\EMPLOYEE_MANAGEMENT.Domain.csproj": {
                 "projectPath": "C:\\Users\\kiran.paulson\\Desktop\\OJT_Project\\Employee_Management\\EMPLOYEE_MANAGEMENT.Domain\\EMPLOYEE_MANAGEMENT.Domain.csproj"
               }

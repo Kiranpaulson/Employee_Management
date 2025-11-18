@@ -270,3 +270,4 @@ C:\Users\kiran.paulson\Desktop\OJT_Project\Employee_Management\EMPLOYEE_MANAGEME
 C:\Users\kiran.paulson\Desktop\OJT_Project\Employee_Management\EMPLOYEE_MANAGEMENT.Api\obj\Debug\net8.0\EMPLOYEE_MANAGEMENT.Api.pdb
 C:\Users\kiran.paulson\Desktop\OJT_Project\Employee_Management\EMPLOYEE_MANAGEMENT.Api\obj\Debug\net8.0\EMPLOYEE_MANAGEMENT.Api.genruntimeconfig.cache
 C:\Users\kiran.paulson\Desktop\OJT_Project\Employee_Management\EMPLOYEE_MANAGEMENT.Api\obj\Debug\net8.0\ref\EMPLOYEE_MANAGEMENT.Api.dll
+C:\Users\kiran.paulson\Desktop\OJT_Project\Employee_Management\EMPLOYEE_MANAGEMENT.Api\obj\Debug\net8.0\EMPLOYEE_MANAGEMENT.Api.sourcelink.json

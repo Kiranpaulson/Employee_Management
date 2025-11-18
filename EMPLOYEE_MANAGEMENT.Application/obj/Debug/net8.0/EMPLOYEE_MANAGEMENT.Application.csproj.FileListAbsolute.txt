@@ -28,3 +28,4 @@ C:\Users\kiran.paulson\Desktop\OJT_Project\Employee_Management\EMPLOYEE_MANAGEME
 C:\Users\kiran.paulson\Desktop\OJT_Project\Employee_Management\EMPLOYEE_MANAGEMENT.Application\obj\Debug\net8.0\refint\EMPLOYEE_MANAGEMENT.Application.dll
 C:\Users\kiran.paulson\Desktop\OJT_Project\Employee_Management\EMPLOYEE_MANAGEMENT.Application\obj\Debug\net8.0\EMPLOYEE_MANAGEMENT.Application.pdb
 C:\Users\kiran.paulson\Desktop\OJT_Project\Employee_Management\EMPLOYEE_MANAGEMENT.Application\obj\Debug\net8.0\ref\EMPLOYEE_MANAGEMENT.Application.dll
+C:\Users\kiran.paulson\Desktop\OJT_Project\Employee_Management\EMPLOYEE_MANAGEMENT.Application\obj\Debug\net8.0\EMPLOYEE_MANAGEMENT.Application.sourcelink.json

@@ -1,5 +1,6 @@
-using EMPLOYEE_MANAGEMENT.Infrastructure;
+using EMPLOYEE_MANAGEMENT.Api.Middleware;
 using EMPLOYEE_MANAGEMENT.Application;
+using EMPLOYEE_MANAGEMENT.Infrastructure;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -21,6 +22,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
 app.UseHttpsRedirection();
 
