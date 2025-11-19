@@ -1,5 +1,5 @@
 ﻿using EMPLOYEE_MANAGEMENT.Application.Common.Behaviour;
-using EMPLOYEE_MANAGEMENT.Application.Validators;
+using EMPLOYEE_MANAGEMENT.Application.Validators.Employee;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;

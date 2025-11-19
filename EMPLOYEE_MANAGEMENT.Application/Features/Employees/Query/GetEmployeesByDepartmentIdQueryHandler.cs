@@ -39,7 +39,7 @@ namespace EMPLOYEE_MANAGEMENT.Application.Features.Employees.Query
         public async Task<ApiResponse<List<EmployeeDto>>> Handle(GetEmployeesByDepartmentIdQuery request, CancellationToken cancellationToken)
         {
             // Fetch all employees
-            var employees = await _employeeRepository.GetAllAsync();
+            var employees = await _employeeRepository.GetEmployeesWithRelationsAsync();
 
             // Filter by DepartmentId
             var filteredEmployees = employees

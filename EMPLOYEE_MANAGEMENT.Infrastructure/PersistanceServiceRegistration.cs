@@ -1,4 +1,5 @@
 ﻿using EMPLOYEE_MANAGEMENT.Application.Absractions.Repositories;
+using EMPLOYEE_MANAGEMENT.Application.Abstractions.Repositories;
 using EMPLOYEE_MANAGEMENT.Application.logging;
 using EMPLOYEE_MANAGEMENT.Infrastructure.Logging;
 using EMPLOYEE_MANAGEMENT.Infrastructure.Persistance;
@@ -31,6 +32,8 @@ namespace EMPLOYEE_MANAGEMENT.Infrastructure
             // Register Generic and Specific Repositories
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+            services.AddScoped<IRoleRepository, RoleRepository>();
 
             // Register Logging Adapter
             services.AddScoped(typeof(IAppLogger<>), typeof(LoggerAdapter<>));

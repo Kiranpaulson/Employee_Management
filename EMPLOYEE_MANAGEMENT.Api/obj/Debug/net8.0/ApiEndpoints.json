@@ -1,5 +1,103 @@
 [
   {
+    "ContainingType": "EMPLOYEE_MANAGEMENT.Api.Controllers.DepartmentController",
+    "Method": "GetAllDepartments",
+    "RelativePath": "api/Department",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "EMPLOYEE_MANAGEMENT.Application.Wrapper.ApiResponse\u00601[[System.Collections.Generic.List\u00601[[EMPLOYEE_MANAGEMENT.Application.Dto.DepartmentDto, EMPLOYEE_MANAGEMENT.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "EMPLOYEE_MANAGEMENT.Api.Controllers.DepartmentController",
+    "Method": "CreateDepartment",
+    "RelativePath": "api/Department",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "command",
+        "Type": "EMPLOYEE_MANAGEMENT.Application.Features.Departments.Command.CreateDepartmentCommand",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "EMPLOYEE_MANAGEMENT.Application.Wrapper.ApiResponse\u00601[[EMPLOYEE_MANAGEMENT.Application.Dto.DepartmentDto, EMPLOYEE_MANAGEMENT.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "EMPLOYEE_MANAGEMENT.Api.Controllers.DepartmentController",
+    "Method": "UpdateDepartment",
+    "RelativePath": "api/Department",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "command",
+        "Type": "EMPLOYEE_MANAGEMENT.Application.Features.Departments.Command.UpdateDepartmentCommand",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "EMPLOYEE_MANAGEMENT.Application.Wrapper.ApiResponse\u00601[[EMPLOYEE_MANAGEMENT.Application.Dto.DepartmentDto, EMPLOYEE_MANAGEMENT.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "EMPLOYEE_MANAGEMENT.Api.Controllers.DepartmentController",
+    "Method": "DeleteDepartment",
+    "RelativePath": "api/Department/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "EMPLOYEE_MANAGEMENT.Application.Wrapper.ApiResponse\u00601[[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
     "ContainingType": "EMPLOYEE_MANAGEMENT.Api.Controllers.EmployeeController",
     "Method": "GetAllEmployees",
     "RelativePath": "api/Employee",
@@ -140,6 +238,104 @@
     "ReturnTypes": [
       {
         "Type": "EMPLOYEE_MANAGEMENT.Application.Wrapper.ApiResponse\u00601[[System.Collections.Generic.List\u00601[[EMPLOYEE_MANAGEMENT.Application.Dto.EmployeeDto, EMPLOYEE_MANAGEMENT.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "EMPLOYEE_MANAGEMENT.Api.Controllers.RoleController",
+    "Method": "GetAllRoles",
+    "RelativePath": "api/Role",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "EMPLOYEE_MANAGEMENT.Application.Wrapper.ApiResponse\u00601[[System.Collections.Generic.List\u00601[[EMPLOYEE_MANAGEMENT.Application.Dto.RoleDto, EMPLOYEE_MANAGEMENT.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "EMPLOYEE_MANAGEMENT.Api.Controllers.RoleController",
+    "Method": "CreateRole",
+    "RelativePath": "api/Role",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "command",
+        "Type": "EMPLOYEE_MANAGEMENT.Application.Features.Roles.Command.CreateRoleCommand",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "EMPLOYEE_MANAGEMENT.Application.Wrapper.ApiResponse\u00601[[EMPLOYEE_MANAGEMENT.Application.Dto.RoleDto, EMPLOYEE_MANAGEMENT.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "EMPLOYEE_MANAGEMENT.Api.Controllers.RoleController",
+    "Method": "UpdateRole",
+    "RelativePath": "api/Role",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "command",
+        "Type": "EMPLOYEE_MANAGEMENT.Application.Features.Roles.Command.UpdateRoleCommand",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "EMPLOYEE_MANAGEMENT.Application.Wrapper.ApiResponse\u00601[[EMPLOYEE_MANAGEMENT.Application.Dto.RoleDto, EMPLOYEE_MANAGEMENT.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "EMPLOYEE_MANAGEMENT.Api.Controllers.RoleController",
+    "Method": "DeleteRole",
+    "RelativePath": "api/Role/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "EMPLOYEE_MANAGEMENT.Application.Wrapper.ApiResponse\u00601[[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
         "MediaTypes": [
           "text/plain",
           "application/json",

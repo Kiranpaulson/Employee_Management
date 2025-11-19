@@ -18,7 +18,7 @@ namespace EMPLOYEE_MANAGEMENT.Application.Features.Employees.Command
         /// with the specified employee identifier.
         /// </summary>
         /// <param name="id">The unique identifier of the employee to delete.</param>
-        public DeleteEmployeeCommand(int id)
+        public DeleteEmployeeCommand( int id)
         {
             Id = id;
         }
