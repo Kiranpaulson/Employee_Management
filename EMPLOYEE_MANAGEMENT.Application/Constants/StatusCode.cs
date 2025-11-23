@@ -1,17 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace EMPLOYEE_MANAGEMENT.Application.Constants
+﻿namespace EMPLOYEE_MANAGEMENT.Application.Constants
 {
-    public class StatusCode
+    /// <summary>
+    /// Defines commonly used HTTP status codes for API responses.
+    /// </summary>
+    public enum StatusCode
     {
-        public const int OK = 200;
-        public const int Created = 201;
-        public const int BadRequest = 400;
-        public const int NotFound = 404;
-        public const int InternalServerError = 500;
+        /// <summary>
+        /// Request processed successfully.
+        /// </summary>
+        OK = 200,
+
+        /// <summary>
+        /// Resource created successfully.
+        /// </summary>
+        Created = 201,
+
+        /// <summary>
+        /// The request is invalid or malformed.
+        /// </summary>
+        BadRequest = 400,
+
+        /// <summary>
+        /// The requested resource was not found.
+        /// </summary>
+        NotFound = 404,
+
+        /// <summary>
+        /// An unexpected server-side error occurred.
+        /// </summary>
+        InternalServerError = 500
     }
 }

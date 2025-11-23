@@ -18,7 +18,7 @@ namespace EMPLOYEE_MANAGEMENT.Application.Absractions.Repositories
         /// (e.g., department, roles, or other navigation properties).
         /// </summary>
         /// <returns>A list of employees including related data.</returns>
-        Task<List<Employee>> GetEmployeesWithRelationsAsync();
+        Task<List<Employee>> GetEmployeesWithRelationsAsync(CancellationToken cancellationToken);
 
         /// <summary>
         /// Retrieves a single employee by the specified ID,
@@ -26,6 +26,6 @@ namespace EMPLOYEE_MANAGEMENT.Application.Absractions.Repositories
         /// </summary>
         /// <param name="id">The unique identifier of the employee.</param>
         /// <returns>The employee entity with related data, or null if not found.</returns>
-        Task<Employee> GetEmployeeWithRelationsByIdAsync(int id);
+        Task<Employee> GetEmployeeWithRelationsByIdAsync(int id, CancellationToken cancellationToken);
     }
 }

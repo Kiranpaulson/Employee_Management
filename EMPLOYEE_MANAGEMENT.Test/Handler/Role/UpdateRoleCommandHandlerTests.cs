@@ -5,6 +5,7 @@ using EMPLOYEE_MANAGEMENT.Application.CustomException;
 using EMPLOYEE_MANAGEMENT.Application.Dto;
 using EMPLOYEE_MANAGEMENT.Application.Features.Roles.Command;
 using EMPLOYEE_MANAGEMENT.Application.Wrapper;
+using EMPLOYEE_MANAGEMENT.Application.logging;
 using EMPLOYEE_MANAGEMENT.Domain.Entities;
 using Moq;
 using System;
@@ -16,6 +17,17 @@ namespace EMPLOYEE_MANAGEMENT.Tests.Application.Features.Roles.Command
 {
     public class UpdateRoleCommandHandlerTests
     {
+        private readonly Mock<IRoleRepository> _mockRepo;
+        private readonly Mock<IMapper> _mockMapper;
+        private readonly Mock<IAppLogger<UpdateRoleCommandHandler>> _mockLogger;
+
+        public UpdateRoleCommandHandlerTests()
+        {
+            _mockRepo = new Mock<IRoleRepository>();
+            _mockMapper = new Mock<IMapper>();
+            _mockLogger = new Mock<IAppLogger<UpdateRoleCommandHandler>>();
+        }
+
         [Fact]
         public async Task Handle_ShouldUpdateRole_AndReturnUpdatedDto()
         {
@@ -45,27 +57,22 @@ namespace EMPLOYEE_MANAGEMENT.Tests.Application.Features.Roles.Command
                 UpdatedDate = DateTime.UtcNow
             };
 
-            var mockRepo = new Mock<IRoleRepository>();
-            var mockMapper = new Mock<IMapper>();
+            // Mock repository
+            _mockRepo.Setup(r => r.GetByIdAsync(roleId, It.IsAny<CancellationToken>()))
+                     .ReturnsAsync(existingRole);
+            _mockRepo.Setup(r => r.UpdateAsync(existingRole, It.IsAny<CancellationToken>()))
+                     .ReturnsAsync(updatedRole);
 
-            mockRepo
-                .Setup(r => r.GetById(roleId))
-                .ReturnsAsync(existingRole);
+            // Mock mapper
+            _mockMapper.Setup(m => m.Map<RoleDto>(updatedRole))
+                       .Returns(new RoleDto
+                       {
+                           Id = roleId,
+                           Name = command.Name,
+                           Description = command.Description
+                       });
 
-            mockRepo
-                .Setup(r => r.UpdateAsync(existingRole))
-                .ReturnsAsync(updatedRole);
-
-            mockMapper
-                .Setup(m => m.Map<RoleDto>(existingRole))
-                .Returns(new RoleDto
-                {
-                    Id = roleId,
-                    Name = command.Name,
-                    Description = command.Description
-                });
-
-            var handler = new UpdateRoleCommandHandler(mockRepo.Object, mockMapper.Object);
+            var handler = new UpdateRoleCommandHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object);
 
             // Act
             var response = await handler.Handle(command, CancellationToken.None);
@@ -76,11 +83,11 @@ namespace EMPLOYEE_MANAGEMENT.Tests.Application.Features.Roles.Command
             Assert.Equal("Updated Name", response.Data.Name);
             Assert.Equal("Updated Description", response.Data.Description);
 
-            mockRepo.Verify(r => r.GetById(roleId), Times.Once);
-            mockRepo.Verify(r => r.UpdateAsync(existingRole), Times.Once);
-            mockMapper.Verify(m => m.Map<RoleDto>(existingRole), Times.Once);
+            _mockRepo.Verify(r => r.GetByIdAsync(roleId, It.IsAny<CancellationToken>()), Times.Once);
+            _mockRepo.Verify(r => r.UpdateAsync(existingRole, It.IsAny<CancellationToken>()), Times.Once);
+            _mockMapper.Verify(m => m.Map<RoleDto>(updatedRole), Times.Once);
+            _mockLogger.VerifyNoOtherCalls();
         }
-
 
         [Fact]
         public async Task Handle_ShouldThrowNotFoundException_WhenRoleDoesNotExist()
@@ -93,22 +100,20 @@ namespace EMPLOYEE_MANAGEMENT.Tests.Application.Features.Roles.Command
                 Name = "Whatever"
             };
 
-            var mockRepo = new Mock<IRoleRepository>();
-            var mockMapper = new Mock<IMapper>();
+            _mockRepo.Setup(r => r.GetByIdAsync(roleId, It.IsAny<CancellationToken>()))
+                     .ReturnsAsync((Role)null);
 
-            // Return null
-            mockRepo
-                .Setup(r => r.GetById(roleId))
-                .ReturnsAsync((Role)null);
-
-            var handler = new UpdateRoleCommandHandler(mockRepo.Object, mockMapper.Object);
+            var handler = new UpdateRoleCommandHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object);
 
             // Act + Assert
-            await Assert.ThrowsAsync<NotFoundException>(() =>
+            var exception = await Assert.ThrowsAsync<NotFoundException>(() =>
                 handler.Handle(command, CancellationToken.None));
 
-            mockRepo.Verify(r => r.GetById(roleId), Times.Once);
-            mockRepo.Verify(r => r.UpdateAsync(It.IsAny<Role>()), Times.Never);
+            Assert.Equal($"Role with Id {roleId} not found", exception.Message);
+
+            _mockRepo.Verify(r => r.GetByIdAsync(roleId, It.IsAny<CancellationToken>()), Times.Once);
+            _mockRepo.Verify(r => r.UpdateAsync(It.IsAny<Role>(), It.IsAny<CancellationToken>()), Times.Never);
+            _mockLogger.VerifyNoOtherCalls();
         }
     }
 }

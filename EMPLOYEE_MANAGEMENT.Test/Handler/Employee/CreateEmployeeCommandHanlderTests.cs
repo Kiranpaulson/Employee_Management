@@ -4,6 +4,7 @@ using EMPLOYEE_MANAGEMENT.Application.Constants;
 using EMPLOYEE_MANAGEMENT.Application.Dto;
 using EMPLOYEE_MANAGEMENT.Application.Features.Employees.Command;
 using EMPLOYEE_MANAGEMENT.Application.Wrapper;
+using EMPLOYEE_MANAGEMENT.Application.logging;
 using EMPLOYEE_MANAGEMENT.Domain.Entities;
 using Moq;
 using System;
@@ -15,6 +16,17 @@ namespace EMPLOYEE_MANAGEMENT.Tests.Application.Features.Employees.Command
 {
     public class CreateEmployeeCommandHandlerTests
     {
+        private readonly Mock<IEmployeeRepository> _mockRepo;
+        private readonly Mock<IMapper> _mockMapper;
+        private readonly Mock<IAppLogger<CreateEmployeeCommandHandler>> _mockLogger;
+
+        public CreateEmployeeCommandHandlerTests()
+        {
+            _mockRepo = new Mock<IEmployeeRepository>();
+            _mockMapper = new Mock<IMapper>();
+            _mockLogger = new Mock<IAppLogger<CreateEmployeeCommandHandler>>();
+        }
+
         [Fact]
         public async Task Handle_ShouldCreateEmployee_AndReturnCreatedResponse()
         {
@@ -29,7 +41,6 @@ namespace EMPLOYEE_MANAGEMENT.Tests.Application.Features.Employees.Command
                 DepartmentId = 2
             };
 
-            // The entity AutoMapper will generate
             var mappedEntity = new Employee
             {
                 Name = command.Name,
@@ -40,7 +51,6 @@ namespace EMPLOYEE_MANAGEMENT.Tests.Application.Features.Employees.Command
                 DepartmentId = command.DepartmentId
             };
 
-            // Saved entity returned from repo
             var savedEmployee = new Employee
             {
                 Id = 10,
@@ -54,28 +64,18 @@ namespace EMPLOYEE_MANAGEMENT.Tests.Application.Features.Employees.Command
                 UpdatedDate = DateTime.UtcNow
             };
 
-            var mockRepo = new Mock<IEmployeeRepository>();
-            mockRepo
-                .Setup(r => r.CreateAsync(It.IsAny<Employee>()))
-                .ReturnsAsync(savedEmployee);
+            _mockRepo.Setup(r => r.CreateAsync(It.IsAny<Employee>(), It.IsAny<CancellationToken>()))
+                     .ReturnsAsync(savedEmployee);
 
-            var mockMapper = new Mock<IMapper>();
+            _mockMapper.Setup(m => m.Map<Employee>(command)).Returns(mappedEntity);
+            _mockMapper.Setup(m => m.Map<EmployeeDto>(savedEmployee))
+                       .Returns(new EmployeeDto
+                       {
+                           Id = savedEmployee.Id,
+                           Name = savedEmployee.Name
+                       });
 
-            // mapper: command → entity
-            mockMapper
-                .Setup(m => m.Map<Employee>(command))
-                .Returns(mappedEntity);
-
-            // mapper: entity → dto
-            mockMapper
-                .Setup(m => m.Map<EmployeeDto>(savedEmployee))
-                .Returns(new EmployeeDto
-                {
-                    Id = savedEmployee.Id,
-                    Name = savedEmployee.Name,
-                });
-
-            var handler = new CreateEmployeeCommandHandler(mockRepo.Object, mockMapper.Object);
+            var handler = new CreateEmployeeCommandHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object);
 
             // Act
             var response = await handler.Handle(command, CancellationToken.None);
@@ -84,16 +84,16 @@ namespace EMPLOYEE_MANAGEMENT.Tests.Application.Features.Employees.Command
             Assert.NotNull(response);
             Assert.Equal(StatusCode.Created, response.Status);
             Assert.Equal("Employee created successfully", response.Message);
-            Assert.NotNull(response.Data);
-            Assert.Equal(10, response.Data.Id);
-            Assert.Equal("John Doe", response.Data.Name);
 
-            // Verify mapping calls
-            mockMapper.Verify(m => m.Map<Employee>(command), Times.Once);
-            mockMapper.Verify(m => m.Map<EmployeeDto>(savedEmployee), Times.Once);
+            Assert.Equal(
+                new { Id = 10, Name = "John Doe" },
+                new { response.Data.Id, response.Data.Name }
+            );
 
-            // Verify repository call
-            mockRepo.Verify(r => r.CreateAsync(It.IsAny<Employee>()), Times.Once);
+            // Verify mappings and repo call
+            _mockMapper.Verify(m => m.Map<Employee>(command), Times.Once);
+            _mockMapper.Verify(m => m.Map<EmployeeDto>(savedEmployee), Times.Once);
+            _mockRepo.Verify(r => r.CreateAsync(It.IsAny<Employee>(), It.IsAny<CancellationToken>()), Times.Once);
         }
     }
 }

@@ -1,40 +1,29 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace EMPLOYEE_MANAGEMENT.Domain.Entities
+﻿namespace EMPLOYEE_MANAGEMENT.Domain.Entities
 {
     /// <summary>
-    /// Represents an application user who can log in and access the system.
-    /// Linked to an Employee record through a one-to-one relationship.
+    /// Represents an application user who can log in to the system.
+    /// Linked to exactly one employee through a one-to-one relationship.
     /// </summary>
     public class User
     {
         /// <summary>
-        /// Primary key — unique identifier for the user.
+        /// Unique identifier for the user account.
         /// </summary>
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         /// <summary>
         /// Username used for authentication.
         /// </summary>
-        [Required]
-        [MaxLength(100)]
         public string Username { get; set; }
 
         /// <summary>
-        /// User's email address.
+        /// Email address of the user.
         /// </summary>
-        [Required]
-        [MaxLength(100)]
         public string Email { get; set; }
 
         /// <summary>
-        /// Hashed password stored securely in the database.
+        /// Hashed password stored securely.
         /// </summary>
-        [Required]
-        [MaxLength(255)]
         public string PasswordHash { get; set; }
 
         /// <summary>
@@ -43,7 +32,7 @@ namespace EMPLOYEE_MANAGEMENT.Domain.Entities
         public bool IsActive { get; set; } = true;
 
         /// <summary>
-        /// One-to-one relationship: a user is associated with exactly one employee.
+        /// Navigation property representing the associated employee record.
         /// </summary>
         public Employee Employee { get; set; }
     }

@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EMPLOYEE_MANAGEMENT.Domain.Entities
 {
@@ -12,37 +10,32 @@ namespace EMPLOYEE_MANAGEMENT.Domain.Entities
     public class Department
     {
         /// <summary>
-        /// Primary key — auto-incremented department identifier.
+        /// Unique identifier for the department.
         /// </summary>
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         /// <summary>
-        /// Name of the department.
+        /// Name of the department (e.g., HR, Finance, IT).
         /// </summary>
-        [Required]
-        [MaxLength(100)]
         public string Name { get; set; }
 
         /// <summary>
         /// Optional description or details about the department.
         /// </summary>
-        [MaxLength(250)]
         public string Description { get; set; }
 
         /// <summary>
-        /// Navigation property — all employees that belong to this department.
+        /// Collection of employees who belong to this department.
         /// </summary>
         public ICollection<Employee> Employees { get; set; } = new List<Employee>();
 
         /// <summary>
-        /// Timestamp for when the department was created.
+        /// Timestamp indicating when the department was created.
         /// </summary>
         public DateTime CreatedDate { get; set; }
 
         /// <summary>
-        /// Timestamp for when the department record was last updated.
+        /// Timestamp indicating when the department record was last updated.
         /// </summary>
         public DateTime UpdatedDate { get; set; }
     }

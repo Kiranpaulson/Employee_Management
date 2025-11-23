@@ -3,6 +3,8 @@ using EMPLOYEE_MANAGEMENT.Domain.Entities;
 using EMPLOYEE_MANAGEMENT.Infrastructure.Persistance;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace EMPLOYEE_MANAGEMENT.Infrastructure.Repository
@@ -17,47 +19,37 @@ namespace EMPLOYEE_MANAGEMENT.Infrastructure.Repository
     {
         private readonly AppDbContext _dbContext;
 
-        /// <summary>
-        /// Initializes a new instance of <see cref="EmployeeRepository"/>.
-        /// The DbContext is passed to both this repository and the base generic repository
-        /// through dependency injection.
-        /// </summary>
-        /// <param name="dbContext">The application's database context.</param>
         public EmployeeRepository(AppDbContext dbContext) : base(dbContext)
         {
             _dbContext = dbContext;
         }
 
         /// <summary>
-        /// Retrieves all employees from the database, including their related
-        /// Department, User, and Role entities.
+        /// Retrieves all employees with related Department, User, and Role.
+        /// Uses AsQueryable() to allow composition and supports cancellation.
         /// </summary>
-        /// <returns>A list of employees with related entity data.</returns>
-        public Task<List<Employee>> GetEmployeesWithRelationsAsync()
+        public Task<List<Employee>> GetEmployeesWithRelationsAsync(CancellationToken cancellationToken)
         {
             return _dbContext.Employees
+                .AsQueryable()
                 .Include(e => e.Department)
                 .Include(e => e.User)
                 .Include(e => e.Role)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
         }
 
         /// <summary>
-        /// Retrieves a single employee by its ID, including the associated
-        /// User, Department, and Role information.
+        /// Retrieves a single employee by its ID with User, Department, and Role.
+        /// Supports cancellation.
         /// </summary>
-        /// <param name="id">The employee ID to search for.</param>
-        /// <returns>
-        /// The matching <see cref="Employee"/> with related data,
-        /// or null if not found.
-        /// </returns>
-        public async Task<Employee> GetEmployeeWithRelationsByIdAsync(int id)
+        public Task<Employee> GetEmployeeWithRelationsByIdAsync(int id, CancellationToken cancellationToken)
         {
-            return await _dbContext.Employees
+            return _dbContext.Employees
+                .AsQueryable()
                 .Include(e => e.User)
                 .Include(e => e.Department)
                 .Include(e => e.Role)
-                .FirstOrDefaultAsync(e => e.Id == id);
+                .FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
         }
     }
 }

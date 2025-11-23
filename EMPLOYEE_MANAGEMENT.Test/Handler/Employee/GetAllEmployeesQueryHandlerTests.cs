@@ -4,6 +4,7 @@ using EMPLOYEE_MANAGEMENT.Application.Constants;
 using EMPLOYEE_MANAGEMENT.Application.Dto;
 using EMPLOYEE_MANAGEMENT.Application.Features.Employees.Query;
 using EMPLOYEE_MANAGEMENT.Application.Wrapper;
+using EMPLOYEE_MANAGEMENT.Application.logging;
 using Moq;
 using System.Collections.Generic;
 using System.Threading;
@@ -16,16 +17,19 @@ namespace EMPLOYEE_MANAGEMENT.Tests.Application.Features.Employees.Query
     {
         private readonly Mock<IEmployeeRepository> _employeeRepositoryMock;
         private readonly Mock<IMapper> _mapperMock;
+        private readonly Mock<IAppLogger<GetAllEmployeesQueryHandler>> _loggerMock;
         private readonly GetAllEmployeesQueryHandler _handler;
 
         public GetAllEmployeesQueryHandlerTests()
         {
             _employeeRepositoryMock = new Mock<IEmployeeRepository>();
             _mapperMock = new Mock<IMapper>();
+            _loggerMock = new Mock<IAppLogger<GetAllEmployeesQueryHandler>>();
 
             _handler = new GetAllEmployeesQueryHandler(
                 _employeeRepositoryMock.Object,
-                _mapperMock.Object
+                _mapperMock.Object,
+                _loggerMock.Object
             );
         }
 
@@ -46,7 +50,7 @@ namespace EMPLOYEE_MANAGEMENT.Tests.Application.Features.Employees.Query
             };
 
             _employeeRepositoryMock
-                .Setup(repo => repo.GetEmployeesWithRelationsAsync())
+                .Setup(repo => repo.GetEmployeesWithRelationsAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(employees);
 
             _mapperMock
@@ -60,12 +64,20 @@ namespace EMPLOYEE_MANAGEMENT.Tests.Application.Features.Employees.Query
 
             // Assert
             Assert.NotNull(result);
-            Assert.Equal(StatusCode.OK, result.Status);       // Use Status instead of Succeeded
+            Assert.Equal(StatusCode.OK, result.Status);
             Assert.Equal(employeeDtos.Count, result.Data.Count);
-            Assert.Equal(employeeDtos[0].Name, result.Data[0].Name);
 
-            _employeeRepositoryMock.Verify(repo => repo.GetEmployeesWithRelationsAsync(), Times.Once);
+            // Single-step equivalence check for first employee
+            Assert.Equal(
+                new { Id = 1, Name = "John Doe" },
+                new { result.Data[0].Id, result.Data[0].Name }
+            );
+
+            _employeeRepositoryMock.Verify(repo => repo.GetEmployeesWithRelationsAsync(It.IsAny<CancellationToken>()), Times.Once);
             _mapperMock.Verify(mapper => mapper.Map<List<EmployeeDto>>(employees), Times.Once);
+
+            // Optional: Verify logger is not null / invoked (depending on handler implementation)
+            _loggerMock.VerifyNoOtherCalls();
         }
 
         [Fact]
@@ -76,7 +88,7 @@ namespace EMPLOYEE_MANAGEMENT.Tests.Application.Features.Employees.Query
             var employeeDtos = new List<EmployeeDto>();
 
             _employeeRepositoryMock
-                .Setup(repo => repo.GetEmployeesWithRelationsAsync())
+                .Setup(repo => repo.GetEmployeesWithRelationsAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(employees);
 
             _mapperMock
@@ -90,8 +102,12 @@ namespace EMPLOYEE_MANAGEMENT.Tests.Application.Features.Employees.Query
 
             // Assert
             Assert.NotNull(result);
-            Assert.Equal(StatusCode.OK, result.Status);   // Use Status
+            Assert.Equal(StatusCode.OK, result.Status);
             Assert.Empty(result.Data);
+
+            _employeeRepositoryMock.Verify(repo => repo.GetEmployeesWithRelationsAsync(It.IsAny<CancellationToken>()), Times.Once);
+            _mapperMock.Verify(mapper => mapper.Map<List<EmployeeDto>>(employees), Times.Once);
+            _loggerMock.VerifyNoOtherCalls();
         }
     }
 }

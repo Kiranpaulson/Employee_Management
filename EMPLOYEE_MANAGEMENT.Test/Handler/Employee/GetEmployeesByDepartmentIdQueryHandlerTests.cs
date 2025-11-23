@@ -4,6 +4,7 @@ using EMPLOYEE_MANAGEMENT.Application.Constants;
 using EMPLOYEE_MANAGEMENT.Application.Dto;
 using EMPLOYEE_MANAGEMENT.Application.Features.Employees.Query;
 using EMPLOYEE_MANAGEMENT.Application.Wrapper;
+using EMPLOYEE_MANAGEMENT.Application.logging;
 using EMPLOYEE_MANAGEMENT.Domain.Entities;
 using Moq;
 using System.Collections.Generic;
@@ -16,6 +17,17 @@ namespace EMPLOYEE_MANAGEMENT.Tests.Application.Features.Employees.Query
 {
     public class GetEmployeesByDepartmentIdQueryHandlerTests
     {
+        private readonly Mock<IEmployeeRepository> _mockRepo;
+        private readonly Mock<IMapper> _mockMapper;
+        private readonly Mock<IAppLogger<GetEmployeesByDepartmentIdQueryHandler>> _loggerMock;
+
+        public GetEmployeesByDepartmentIdQueryHandlerTests()
+        {
+            _mockRepo = new Mock<IEmployeeRepository>();
+            _mockMapper = new Mock<IMapper>();
+            _loggerMock = new Mock<IAppLogger<GetEmployeesByDepartmentIdQueryHandler>>();
+        }
+
         [Fact]
         public async Task Handle_ShouldReturnEmployeesFilteredByDepartment()
         {
@@ -29,19 +41,17 @@ namespace EMPLOYEE_MANAGEMENT.Tests.Application.Features.Employees.Query
                 new Employee { Id = 3, Name = "Bob", DepartmentId = 1 }
             };
 
-            var mockRepo = new Mock<IEmployeeRepository>();
-            mockRepo
-                .Setup(repo => repo.GetEmployeesWithRelationsAsync())
+            _mockRepo
+                .Setup(repo => repo.GetEmployeesWithRelationsAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(employees);
 
-            var mockMapper = new Mock<IMapper>();
-            mockMapper
+            _mockMapper
                 .Setup(m => m.Map<List<EmployeeDto>>(It.IsAny<List<Employee>>()))
                 .Returns((List<Employee> src) =>
                     src.Select(e => new EmployeeDto { Id = e.Id, Name = e.Name }).ToList()
                 );
 
-            var handler = new GetEmployeesByDepartmentIdQueryHandler(mockRepo.Object, mockMapper.Object);
+            var handler = new GetEmployeesByDepartmentIdQueryHandler(_mockRepo.Object, _mockMapper.Object, _loggerMock.Object);
             var request = new GetEmployeesByDepartmentIdQuery(departmentId);
 
             // Act
@@ -49,16 +59,29 @@ namespace EMPLOYEE_MANAGEMENT.Tests.Application.Features.Employees.Query
 
             // Assert
             Assert.NotNull(result);
-            Assert.Equal(StatusCode.OK, result.Status);   // <- use Status
+            Assert.Equal(StatusCode.OK, result.Status);
             Assert.NotNull(result.Data);
             Assert.Equal(2, result.Data.Count);
-            Assert.Contains(result.Data, e => e.Id == 1);
-            Assert.Contains(result.Data, e => e.Id == 3);
+
+            // Single-step equivalence for included employees
+            var expectedEmployees = new[]
+            {
+                new { Id = 1, Name = "John" },
+                new { Id = 3, Name = "Bob" }
+            };
+
+            foreach (var expected in expectedEmployees)
+            {
+                Assert.Contains(result.Data, e => e.Id == expected.Id && e.Name == expected.Name);
+            }
+
+            // Ensure excluded employee is not present
             Assert.DoesNotContain(result.Data, e => e.Id == 2);
 
-            // Ensure repository method is called exactly once
-            mockRepo.Verify(r => r.GetEmployeesWithRelationsAsync(), Times.Once);
-            mockMapper.Verify(m => m.Map<List<EmployeeDto>>(It.IsAny<List<Employee>>()), Times.Once);
+            // Verify mocks
+            _mockRepo.Verify(r => r.GetEmployeesWithRelationsAsync(It.IsAny<CancellationToken>()), Times.Once);
+            _mockMapper.Verify(m => m.Map<List<EmployeeDto>>(It.IsAny<List<Employee>>()), Times.Once);
+            _loggerMock.VerifyNoOtherCalls();
         }
     }
 }

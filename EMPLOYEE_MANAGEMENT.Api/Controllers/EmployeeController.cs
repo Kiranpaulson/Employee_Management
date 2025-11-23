@@ -1,10 +1,13 @@
-﻿using EMPLOYEE_MANAGEMENT.Application.Dto;
+﻿using EMPLOYEE_MANAGEMENT.Api.Common;
+using EMPLOYEE_MANAGEMENT.Application.CustomException;
+using EMPLOYEE_MANAGEMENT.Application.Dto;
 using EMPLOYEE_MANAGEMENT.Application.Features.Employees.Command;
 using EMPLOYEE_MANAGEMENT.Application.Features.Employees.Query;
 using EMPLOYEE_MANAGEMENT.Application.Wrapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace EMPLOYEE_MANAGEMENT.Api.Controllers
@@ -13,31 +16,26 @@ namespace EMPLOYEE_MANAGEMENT.Api.Controllers
     /// Controller responsible for handling employee-related operations such as
     /// retrieving, creating, updating, and deleting employee records.
     /// </summary>
-    [ApiController]
-    [Route("api/[controller]")]
-    public class EmployeeController : ControllerBase
+    public class EmployeeController : BaseApiController
     {
-       
-        private readonly IMediator _mediator;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="EmployeeController"/> class.
         /// </summary>
         /// <param name="mediator">Mediator dependency for handling requests.</param>
-        public EmployeeController(IMediator mediator)
+        public EmployeeController(IMediator mediator) : base(mediator)
         {
-            _mediator = mediator;
         }
 
         /// <summary>
         /// Retrieves all employees in the system.
         /// </summary>
-        /// <returns>A list of employee DTOs wrapped in an ApiResponse.</returns>
+        /// <param name="cancellationToken">Token to cancel the request.</param>
         [HttpGet]
-        public async Task<ActionResult<ApiResponse<List<EmployeeDto>>>> GetAllEmployees()
+        public async Task<ActionResult<ApiResponse<List<EmployeeDto>>>>
+            GetAllEmployees(CancellationToken cancellationToken)
         {
             var query = new GetAllEmployeesQuery();
-            var response = await _mediator.Send(query);
+            var response = await _mediator.Send(query, cancellationToken);
             return Ok(response);
         }
 
@@ -45,25 +43,32 @@ namespace EMPLOYEE_MANAGEMENT.Api.Controllers
         /// Retrieves an employee by their unique ID.
         /// </summary>
         /// <param name="id">The ID of the employee.</param>
-        /// <returns>An employee DTO wrapped in an ApiResponse.</returns>
+        ///// <param name="cancellationToken">Token to cancel the request.</param>
         [HttpGet("{id}")]
-        public async Task<ActionResult<ApiResponse<EmployeeDto>>> GetEmployeeById(int id)
+        public async Task<ActionResult<ApiResponse<EmployeeDto>>>
+            GetEmployeeById(int id, CancellationToken cancellationToken)
         {
             var query = new GetEmployeeByIdQuery(id);
-            var response = await _mediator.Send(query);
+            var response = await _mediator.Send(query, cancellationToken);
             return Ok(response);
         }
+
+
+
+
+
 
         /// <summary>
         /// Retrieves employees belonging to a specific department.
         /// </summary>
         /// <param name="departmentId">The department ID.</param>
-        /// <returns>A list of employees in that department wrapped in an ApiResponse.</returns>
+        /// <param name="cancellationToken">Token to cancel the request.</param>
         [HttpGet("department/{departmentId}")]
-        public async Task<ActionResult<ApiResponse<List<EmployeeDto>>>> GetEmployeesByDepartmentId(int departmentId)
+        public async Task<ActionResult<ApiResponse<List<EmployeeDto>>>>
+            GetEmployeesByDepartmentId(int departmentId, CancellationToken cancellationToken)
         {
             var query = new GetEmployeesByDepartmentIdQuery(departmentId);
-            var response = await _mediator.Send(query);
+            var response = await _mediator.Send(query, cancellationToken);
             return Ok(response);
         }
 
@@ -71,11 +76,12 @@ namespace EMPLOYEE_MANAGEMENT.Api.Controllers
         /// Creates a new employee.
         /// </summary>
         /// <param name="command">The employee creation command data.</param>
-        /// <returns>The created employee wrapped in an ApiResponse.</returns>
+        /// <param name="cancellationToken">Token to cancel the request.</param>
         [HttpPost]
-        public async Task<ActionResult<ApiResponse<EmployeeDto>>> CreateEmployee([FromBody] CreateEmployeeCommand command)
+        public async Task<ActionResult<ApiResponse<EmployeeDto>>>
+            CreateEmployee([FromBody] CreateEmployeeCommand command, CancellationToken cancellationToken)
         {
-            var response = await _mediator.Send(command);
+            var response = await _mediator.Send(command, cancellationToken);
             return Ok(response);
         }
 
@@ -83,12 +89,13 @@ namespace EMPLOYEE_MANAGEMENT.Api.Controllers
         /// Deletes an employee by their ID.
         /// </summary>
         /// <param name="id">The ID of the employee to delete.</param>
-        /// <returns>A success message wrapped in an ApiResponse.</returns>
+        /// <param name="cancellationToken">Token to cancel the request.</param>
         [HttpDelete("{id}")]
-        public async Task<ActionResult<ApiResponse<string>>> DeleteEmployee(int id)
+        public async Task<ActionResult<ApiResponse<string>>>
+            DeleteEmployee(int id, CancellationToken cancellationToken)
         {
             var command = new DeleteEmployeeCommand(id);
-            var response = await _mediator.Send(command);
+            var response = await _mediator.Send(command, cancellationToken);
             return Ok(response);
         }
 
@@ -96,11 +103,12 @@ namespace EMPLOYEE_MANAGEMENT.Api.Controllers
         /// Updates an existing employee.
         /// </summary>
         /// <param name="command">The employee update data.</param>
-        /// <returns>The updated employee wrapped in an ApiResponse.</returns>
+        /// <param name="cancellationToken">Token to cancel the request.</param>
         [HttpPatch]
-        public async Task<ActionResult<ApiResponse<EmployeeDto>>> UpdateEmployee([FromBody] UpdateEmployeeCommand command)
+        public async Task<ActionResult<ApiResponse<EmployeeDto>>>
+            UpdateEmployee([FromBody] UpdateEmployeeCommand command, CancellationToken cancellationToken)
         {
-            var response = await _mediator.Send(command);
+            var response = await _mediator.Send(command, cancellationToken);
             return Ok(response);
         }
     }

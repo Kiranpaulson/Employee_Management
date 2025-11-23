@@ -9,14 +9,14 @@ namespace EMPLOYEE_MANAGEMENT.Infrastructure.Repository
     /// </summary>
     public class DepartmentRepository : GenericRepository<Department>, IDepartmentRepository
     {
-        private readonly AppDbContext _db;
+        private readonly AppDbContext _dbContext;
 
         /// <summary>
         /// Initializes the repository with a database context.
         /// </summary>
         public DepartmentRepository(AppDbContext dbContext) : base(dbContext)
         {
-            _db = dbContext;
+            _dbContext = dbContext;
         }
     }
 }

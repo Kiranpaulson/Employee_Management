@@ -1,13 +1,12 @@
 ﻿using EMPLOYEE_MANAGEMENT.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
+
 
 namespace EMPLOYEE_MANAGEMENT.Infrastructure.Persistance
 {
     public static class DbSeeder
     {
-        public static void Seed(this ModelBuilder modelBuilder)
+        public static void Seeds(this ModelBuilder modelBuilder)
         {
             var now = DateTime.UtcNow;
 

@@ -1,78 +1,70 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EMPLOYEE_MANAGEMENT.Domain.Entities
 {
     /// <summary>
-    /// Represents an employee within the organization.
-    /// Connected to Department, User, and Role entities.
+    /// Represents an employee in the organization.
+    /// Each employee is linked to a department, role, and user account.
     /// </summary>
     public class Employee
     {
         /// <summary>
-        /// Primary key — auto-generated employee identifier.
+        /// Unique identifier for the employee.
         /// </summary>
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         /// <summary>
         /// Full name of the employee.
         /// </summary>
-        [Required]
         public string Name { get; set; }
 
         /// <summary>
-        /// Foreign key — department the employee belongs to.
+        /// Foreign key representing the department the employee belongs to.
         /// </summary>
-        [ForeignKey(nameof(Department))]
         public int DepartmentId { get; set; }
 
         /// <summary>
-        /// Navigation property — associated department.
+        /// Navigation property for the employee's department.
         /// </summary>
         public Department Department { get; set; }
 
         /// <summary>
-        /// Foreign key — associated user account (login credentials).
+        /// Foreign key representing the associated user account.
         /// </summary>
-        [ForeignKey(nameof(User))]
         public int UserId { get; set; }
 
         /// <summary>
-        /// Navigation property — user details.
+        /// Navigation property for the associated user account.
         /// </summary>
         public User User { get; set; }
 
         /// <summary>
-        /// Foreign key — employee role (Admin, Manager, Staff, etc.).
+        /// Foreign key representing the employee’s role.
         /// </summary>
-        [ForeignKey(nameof(Role))]
         public int RoleId { get; set; }
 
         /// <summary>
-        /// Navigation property — role details.
+        /// Navigation property for the employee’s role details.
         /// </summary>
         public Role Role { get; set; }
 
         /// <summary>
-        /// Employee phone number (10 digits).
+        /// Phone number of the employee (up to 10 digits).
         /// </summary>
         public string PhoneNumber { get; set; }
 
         /// <summary>
-        /// Employee Aadhar number (12 digits).
+        /// Aadhar number of the employee (12-digit identifier).
         /// </summary>
         public string AadharNumber { get; set; }
 
         /// <summary>
-        /// Timestamp — when the employee record was created.
+        /// Timestamp indicating when the employee record was created.
         /// </summary>
         public DateTime CreatedDate { get; set; }
 
         /// <summary>
-        /// Timestamp — when the employee record was last updated.
+        /// Timestamp indicating when the employee record was last updated.
         /// </summary>
         public DateTime UpdatedDate { get; set; }
     }

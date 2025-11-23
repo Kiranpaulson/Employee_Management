@@ -8,16 +8,19 @@
     {
         /// <summary>
         /// Unique identifier of the department.
+        /// Example: 3
         /// </summary>
         public int Id { get; set; }
 
         /// <summary>
         /// Name of the department.
+        /// Example: "Human Resources"
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
         /// Department description.
+        /// Example: "Handles recruitment and employee welfare."
         /// </summary>
         public string Description { get; set; }
     }

@@ -3,7 +3,9 @@ using EMPLOYEE_MANAGEMENT.Application.Abstractions.Repositories;
 using EMPLOYEE_MANAGEMENT.Application.Dto;
 using EMPLOYEE_MANAGEMENT.Application.Features.Departments.Command;
 using EMPLOYEE_MANAGEMENT.Application.Features.Departments.Handler;
+using EMPLOYEE_MANAGEMENT.Application.CustomException; // For NotFoundException
 using EMPLOYEE_MANAGEMENT.Application.Wrapper;
+using EMPLOYEE_MANAGEMENT.Application.logging;
 using EMPLOYEE_MANAGEMENT.Domain.Entities;
 using Moq;
 using System;
@@ -17,17 +19,19 @@ namespace EMPLOYEE_MANAGEMENT.Tests.Application.Features.Departments
     {
         private readonly Mock<IDepartmentRepository> _mockRepo;
         private readonly Mock<IMapper> _mockMapper;
+        private readonly Mock<IAppLogger<UpdateDepartmentCommandHandler>> _mockLogger;
 
         public UpdateDepartmentCommandHandlerTests()
         {
             _mockRepo = new Mock<IDepartmentRepository>();
             _mockMapper = new Mock<IMapper>();
+            _mockLogger = new Mock<IAppLogger<UpdateDepartmentCommandHandler>>();
         }
 
         [Fact]
-        public async Task Handle_ShouldReturnFail_WhenDepartmentNotFound()
+        public async Task Handle_ShouldThrowNotFoundException_WhenDepartmentNotFound()
         {
-            // Arrange: create command via object initializer (safe)
+            // Arrange
             var command = new UpdateDepartmentCommand
             {
                 Id = 99,
@@ -36,21 +40,16 @@ namespace EMPLOYEE_MANAGEMENT.Tests.Application.Features.Departments
             };
 
             _mockRepo
-                .Setup(r => r.GetById(99))
+                .Setup(r => r.GetByIdAsync(99, It.IsAny<CancellationToken>()))
                 .ReturnsAsync((Department)null);
 
-            var handler = new UpdateDepartmentCommandHandler(_mockRepo.Object, _mockMapper.Object);
+            var handler = new UpdateDepartmentCommandHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object);
 
-            // Act
-            var result = await handler.Handle(command, CancellationToken.None);
+            // Act & Assert
+            await Assert.ThrowsAsync<NotFoundException>(() =>
+                handler.Handle(command, CancellationToken.None));
 
-            // Assert
-            Assert.NotNull(result);
-            Assert.Equal("Department not found", result.Message);
-            Assert.Null(result.Data);
-
-            _mockRepo.Verify(r => r.GetById(99), Times.Once);
-            _mockRepo.Verify(r => r.UpdateAsync(It.IsAny<Department>()), Times.Never);
+            _mockRepo.Verify(r => r.UpdateAsync(It.IsAny<Department>(), It.IsAny<CancellationToken>()), Times.Never);
             _mockMapper.Verify(m => m.Map<DepartmentDto>(It.IsAny<Department>()), Times.Never);
         }
 
@@ -67,7 +66,6 @@ namespace EMPLOYEE_MANAGEMENT.Tests.Application.Features.Departments
                 UpdatedDate = DateTime.UtcNow.AddDays(-5)
             };
 
-            // Use object initializer for command
             var command = new UpdateDepartmentCommand
             {
                 Id = 10,
@@ -90,32 +88,28 @@ namespace EMPLOYEE_MANAGEMENT.Tests.Application.Features.Departments
                 Description = "Updated Desc"
             };
 
-            _mockRepo
-                .Setup(r => r.GetById(10))
-                .ReturnsAsync(existing);
+            _mockRepo.Setup(r => r.GetByIdAsync(10, It.IsAny<CancellationToken>()))
+                     .ReturnsAsync(existing);
 
-            _mockRepo
-                .Setup(r => r.UpdateAsync(It.IsAny<Department>()))
-                .ReturnsAsync(updatedDept);
+            _mockRepo.Setup(r => r.UpdateAsync(It.IsAny<Department>(), It.IsAny<CancellationToken>()))
+                     .ReturnsAsync(updatedDept);
 
-            _mockMapper
-                .Setup(m => m.Map<DepartmentDto>(It.IsAny<Department>()))
-                .Returns(dto);
+            _mockMapper.Setup(m => m.Map<DepartmentDto>(It.IsAny<Department>()))
+                       .Returns(dto);
 
-            var handler = new UpdateDepartmentCommandHandler(_mockRepo.Object, _mockMapper.Object);
+            var handler = new UpdateDepartmentCommandHandler(_mockRepo.Object, _mockMapper.Object, _mockLogger.Object);
 
             // Act
             var result = await handler.Handle(command, CancellationToken.None);
 
-            // Assert (check data/message/status as per your ApiResponse)
-            Assert.NotNull(result);
-            Assert.NotNull(result.Data);
-            Assert.Equal(10, result.Data.Id);
-            Assert.Equal("HR Updated", result.Data.Name);
-            Assert.Equal("Updated Desc", result.Data.Description);
+            // Assert using single-step equivalence
+            Assert.Equal(
+                new { Id = 10, Name = "HR Updated", Description = "Updated Desc" },
+                new { result.Data.Id, result.Data.Name, result.Data.Description }
+            );
 
-            _mockRepo.Verify(r => r.GetById(10), Times.Once);
-            _mockRepo.Verify(r => r.UpdateAsync(It.IsAny<Department>()), Times.Once);
+            _mockRepo.Verify(r => r.GetByIdAsync(10, It.IsAny<CancellationToken>()), Times.Once);
+            _mockRepo.Verify(r => r.UpdateAsync(It.IsAny<Department>(), It.IsAny<CancellationToken>()), Times.Once);
             _mockMapper.Verify(m => m.Map<DepartmentDto>(It.IsAny<Department>()), Times.Once);
         }
     }

@@ -10,17 +10,20 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
+using EMPLOYEE_MANAGEMENT.Application.logging;
 
 public class CreateDepartmentCommandHandlerTests
 {
     private readonly Mock<IDepartmentRepository> _mockRepo;
+    private readonly Mock<IAppLogger<CreateDepartmentCommandHandler>> _mockLogger;
     private readonly IMapper _mapper;
 
     public CreateDepartmentCommandHandlerTests()
     {
         _mockRepo = new Mock<IDepartmentRepository>();
+        _mockLogger = new Mock<IAppLogger<CreateDepartmentCommandHandler>>();
 
-        // AutoMapper config for Department → DepartmentDto
+        // AutoMapper config for CreateDepartmentCommand → Department → DepartmentDto
         var config = new MapperConfiguration(cfg =>
         {
             cfg.CreateMap<CreateDepartmentCommand, Department>();
@@ -49,23 +52,22 @@ public class CreateDepartmentCommandHandlerTests
             UpdatedDate = DateTime.UtcNow
         };
 
-        // Mock repo CreateAsync
-        _mockRepo.Setup(r => r.CreateAsync(It.IsAny<Department>()))
+        _mockRepo.Setup(r => r.CreateAsync(It.IsAny<Department>(), It.IsAny<CancellationToken>()))
                  .ReturnsAsync(savedEntity);
 
-        var handler = new CreateDepartmentCommandHandler(_mockRepo.Object, _mapper);
+        var handler = new CreateDepartmentCommandHandler(_mockRepo.Object, _mapper, _mockLogger.Object);
 
         // Act
         var result = await handler.Handle(command, CancellationToken.None);
 
-        // Assert (NO SUCCESS CHECKS)
-        Assert.NotNull(result);
-        Assert.NotNull(result.Data);
-        Assert.Equal(10, result.Data.Id);
-        Assert.Equal("IT", result.Data.Name);
-        Assert.Equal("Tech Department", result.Data.Description);
+        // Assert all properties in a single step using an anonymous object
+        Assert.Equal(new { Id = 10, Name = "IT", Description = "Tech Department" },
+                     new { result.Data.Id, result.Data.Name, result.Data.Description });
 
-        // Ensure CreateAsync was called once
-        _mockRepo.Verify(r => r.CreateAsync(It.IsAny<Department>()), Times.Once);
+        // Ensure CreateAsync was called once with any Department and any CancellationToken
+        _mockRepo.Verify(r => r.CreateAsync(It.IsAny<Department>(), It.IsAny<CancellationToken>()), Times.Once);
+
+        // Optional: verify logger was called at least once
+        _mockLogger.Verify(l => l.LogInformation(It.IsAny<string>(), It.IsAny<object[]>()), Times.AtLeastOnce);
     }
 }

@@ -3,7 +3,9 @@ using EMPLOYEE_MANAGEMENT.Application.Absractions.Repositories;
 using EMPLOYEE_MANAGEMENT.Application.CustomException;
 using EMPLOYEE_MANAGEMENT.Application.Dto;
 using EMPLOYEE_MANAGEMENT.Application.Wrapper;
+using EMPLOYEE_MANAGEMENT.Application.logging;
 using MediatR;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,38 +19,59 @@ namespace EMPLOYEE_MANAGEMENT.Application.Features.Employees.Query
     {
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IMapper _mapper;
+        private readonly IAppLogger<GetEmployeeByIdQueryHandler> _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GetEmployeeByIdQueryHandler"/> class.
         /// </summary>
         /// <param name="employeeRepository">Repository used to access employee data.</param>
         /// <param name="mapper">AutoMapper instance used for entity-to-DTO conversion.</param>
-        public GetEmployeeByIdQueryHandler(IEmployeeRepository employeeRepository, IMapper mapper)
+        /// <param name="logger">Application logger for logging information, warnings, and errors.</param>
+        public GetEmployeeByIdQueryHandler(
+            IEmployeeRepository employeeRepository,
+            IMapper mapper,
+            IAppLogger<GetEmployeeByIdQueryHandler> logger)
         {
             _employeeRepository = employeeRepository;
             _mapper = mapper;
+            _logger = logger;
         }
 
         /// <summary>
         /// Handles the request to fetch a single employee by ID.
+        /// Throws <see cref="NotFoundException"/> if the employee does not exist.
         /// </summary>
         /// <param name="request">The query request containing the employee ID.</param>
         /// <param name="cancellationToken">Token used to cancel the operation.</param>
-        /// <returns>An ApiResponse containing the employee details or an error.</returns>
-        /// <exception cref="NotFoundException">
-        /// Thrown when an employee with the specified ID does not exist.
-        /// </exception>
-        public async Task<ApiResponse<EmployeeDto>> Handle(GetEmployeeByIdQuery request, CancellationToken cancellationToken)
+        /// <returns>An <see cref="ApiResponse{EmployeeDto}"/> containing the employee details.</returns>
+        public async Task<ApiResponse<EmployeeDto>> Handle(
+            GetEmployeeByIdQuery request,
+            CancellationToken cancellationToken)
         {
-            var employee = await _employeeRepository.GetEmployeeWithRelationsByIdAsync(request.Id);
+            _logger.LogInformation("Starting GetEmployeeByIdQueryHandler for Employee Id: {0}", request.Id);
 
-            if (employee == null)
+            try
             {
-                throw new NotFoundException($"Employee with Id {request.Id} not found");
-            }
+                _logger.LogInformation("Fetching employee from repository...");
+                var employee = await _employeeRepository.GetEmployeeWithRelationsByIdAsync(request.Id, cancellationToken);
 
-            var employeeDto = _mapper.Map<EmployeeDto>(employee);
-            return ApiResponse<EmployeeDto>.Success(employeeDto);
+                if (employee == null)
+                {
+                    _logger.LogWarning("Employee with Id {0} not found.", request.Id);
+                    throw new NotFoundException($"Employee with Id {request.Id} not found");
+                }
+
+                _logger.LogInformation("Mapping employee entity to DTO...");
+                var employeeDto = _mapper.Map<EmployeeDto>(employee);
+
+                _logger.LogInformation("GetEmployeeByIdQueryHandler completed successfully for Employee Id: {0}", request.Id);
+                return ApiResponse<EmployeeDto>.Success(employeeDto);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogErrors("Error in GetEmployeeByIdQueryHandler for Employee Id {0}: {1}", request.Id, ex.Message);
+                throw;
+            }
         }
     }
 }

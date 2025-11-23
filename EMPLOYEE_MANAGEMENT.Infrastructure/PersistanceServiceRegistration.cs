@@ -1,9 +1,12 @@
 ﻿using EMPLOYEE_MANAGEMENT.Application.Absractions.Repositories;
 using EMPLOYEE_MANAGEMENT.Application.Abstractions.Repositories;
+using EMPLOYEE_MANAGEMENT.Application.Abstractions.Services;
+using EMPLOYEE_MANAGEMENT.Application.Infrastructure.Services;
 using EMPLOYEE_MANAGEMENT.Application.logging;
 using EMPLOYEE_MANAGEMENT.Infrastructure.Logging;
 using EMPLOYEE_MANAGEMENT.Infrastructure.Persistance;
 using EMPLOYEE_MANAGEMENT.Infrastructure.Repository;
+using EMPLOYEE_MANAGEMENT.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,7 +40,13 @@ namespace EMPLOYEE_MANAGEMENT.Infrastructure
 
             // Register Logging Adapter
             services.AddScoped(typeof(IAppLogger<>), typeof(LoggerAdapter<>));
+            services.AddScoped<IUserRepository, UserRepository>();     // ✅ ADDED
 
+            // Register Password Hasher
+            services.AddScoped<IPasswordHasher, PasswordHasher>();     // ✅ FIXED (your custom hasher)
+
+            // Register Auth Service (JWT Token generator)
+            services.AddScoped<IAuthService, AuthService>();
             return services;
         }
     }

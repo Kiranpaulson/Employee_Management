@@ -88,11 +88,14 @@ namespace EMPLOYEE_MANAGEMENT.Api.Middleware
 
                 default:
                     statusCode = (int)HttpStatusCode.InternalServerError;
+
+                    var inner = exception.InnerException?.Message;
+
                     apiResponse = new
                     {
                         Success = false,
-                        Message = "An unexpected error occurred.",
-                        Details = exception.Message
+                        Message = "UNEXPECTED ERROR",
+                        Details = inner ?? exception.Message   // ⭐ this is the important part
                     };
                     break;
             }

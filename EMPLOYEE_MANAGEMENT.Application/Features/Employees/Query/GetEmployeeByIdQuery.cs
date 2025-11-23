@@ -25,3 +25,4 @@ namespace EMPLOYEE_MANAGEMENT.Application.Features.Employees.Query
         }
     }
 }
+

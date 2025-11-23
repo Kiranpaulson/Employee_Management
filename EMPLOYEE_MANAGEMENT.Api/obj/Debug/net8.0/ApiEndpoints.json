@@ -1,5 +1,57 @@
 [
   {
+    "ContainingType": "EMPLOYEE_MANAGEMENT.Api.Controllers.AuthController",
+    "Method": "Login",
+    "RelativePath": "api/Auth/login",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "query",
+        "Type": "EMPLOYEE_MANAGEMENT.Application.Features.Users.Query.LoginUserQuery",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "EMPLOYEE_MANAGEMENT.Application.Wrapper.ApiResponse\u00601[[EMPLOYEE_MANAGEMENT.Application.Dto.LoginResponseDto, EMPLOYEE_MANAGEMENT.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "EMPLOYEE_MANAGEMENT.Api.Controllers.AuthController",
+    "Method": "Register",
+    "RelativePath": "api/Auth/register",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "command",
+        "Type": "EMPLOYEE_MANAGEMENT.Application.Features.Users.Command.CreateUserCommand",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "EMPLOYEE_MANAGEMENT.Application.Wrapper.ApiResponse\u00601[[EMPLOYEE_MANAGEMENT.Domain.Entities.User, EMPLOYEE_MANAGEMENT.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
     "ContainingType": "EMPLOYEE_MANAGEMENT.Api.Controllers.DepartmentController",
     "Method": "GetAllDepartments",
     "RelativePath": "api/Department",
